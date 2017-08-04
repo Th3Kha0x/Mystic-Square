@@ -25,30 +25,96 @@
  *
  ******************************************************************************/
 
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdOut;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.net.URL;
+import java.util.Locale;
+import java.util.Scanner;
+
+
 
 public class PuzzleChecker {
+    // assume Unicode UTF-8 encoding
+    private static final String CHARSET_NAME = "UTF-8";
+
+    // assume language = English, country = US for consistency with System.out.
+    private static final Locale LOCALE = Locale.US;
+    
+    private Scanner scanner;
+    
+    public Scanner getScanner() {
+    	return scanner;
+    }
+	
+    private void loadScanner(String name) {
+        if (name == null) throw new IllegalArgumentException("argument is null");
+        try {
+            // first try to read file from local file system
+            File file = new File(name);
+            if (file.exists()) {
+                // for consistency with StdIn, wrap with BufferedInputStream instead of use
+                // file as argument to Scanner
+                FileInputStream fis = new FileInputStream(file);
+                scanner = new Scanner(new BufferedInputStream(fis), CHARSET_NAME);
+                scanner.useLocale(LOCALE);
+                return;
+            }
+
+            // next try for files included in jar
+            URL url = getClass().getResource(name);
+
+            // try this as well
+            if (url == null) {
+                url = getClass().getClassLoader().getResource(name);
+            }
+
+            // or URL from web
+            if (url == null) {
+                url = new URL(name);
+            }
+
+            URLConnection site = url.openConnection();
+
+            // in order to set User-Agent, replace above line with these two
+            // HttpURLConnection site = (HttpURLConnection) url.openConnection();
+            // site.addRequestProperty("User-Agent", "Mozilla/4.76");
+
+            InputStream is     = site.getInputStream();
+            scanner            = new Scanner(new BufferedInputStream(is), CHARSET_NAME);
+            scanner.useLocale(LOCALE);
+        }
+        catch (IOException ioe) {
+            throw new IllegalArgumentException("Could not open " + name, ioe);
+        }
+    }
 
     public static void main(String[] args) {
 
+    	PuzzleChecker pc = new PuzzleChecker();
+    	Scanner sc;
         // for each command-line argument
         for (String filename : args) {
 
             // read in the board specified in the filename
-            In in = new In(filename);
-            int n = in.readInt();
+            pc.loadScanner(filename); 
+            sc = pc.getScanner();
+            int n = sc.nextInt();
             int[][] tiles = new int[n][n];
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    tiles[i][j] = in.readInt();
+                    tiles[i][j] = sc.nextInt();
                 }
             }
 
             // solve the slider puzzle
             Board initial = new Board(tiles);
             Solver solver = new Solver(initial);
-            StdOut.println(filename + ": " + solver.moves());
+            System.out.println(filename + ": " + solver.moves());
         }
     }
+    
 }

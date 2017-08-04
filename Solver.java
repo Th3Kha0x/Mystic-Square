@@ -1,7 +1,6 @@
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdOut;
+import java.util.PriorityQueue;
+import java.util.Scanner;
+import java.util.Stack;
 
 public class Solver {
 	private SearchNode solved;
@@ -10,15 +9,15 @@ public class Solver {
 	public Solver(Board initial) {
 		if (initial == null) throw new IllegalArgumentException("can't pass null as an argument!");
 		
-		MinPQ<SearchNode> q, pq1 = new MinPQ<SearchNode>(), pq2 = new MinPQ<SearchNode>();
+		PriorityQueue<SearchNode> q, pq1 = new PriorityQueue<SearchNode>(), pq2 = new PriorityQueue<SearchNode>();
 		SearchNode minNode = new SearchNode(initial, 0, null);
-		pq1.insert(minNode);
+		pq1.add(minNode);
 		
 		Board board, swapBoard = initial.twin();
 		SearchNode swappedMinNode = new SearchNode(swapBoard, 0, null);
-		pq2.insert(swappedMinNode);
+		pq2.add(swappedMinNode);
 		boolean flip = false;
-		Stack<MinPQ<SearchNode>> s = new Stack<MinPQ<SearchNode>>();
+		Stack<PriorityQueue<SearchNode>> s = new Stack<PriorityQueue<SearchNode>>();
 		
 		while(!pq1.isEmpty()) {
 			if (flip) {
@@ -31,7 +30,7 @@ public class Solver {
 			
 			for(int i = 0; i < 2; i++) {
 				q = s.pop();
-				minNode = q.delMin();
+				minNode = q.remove();
 				board = minNode.getBoard();
 
 				if (board.isGoal()) {
@@ -44,7 +43,7 @@ public class Solver {
 					break;
 				}
 				for (SearchNode n : minNode.neighbors()) {
-					q.insert(n);
+					q.add(n);
 				}
 			}
 			if (minNumberOfMoves != -2) break;
@@ -121,12 +120,13 @@ public class Solver {
 	
 	public static void main(String[] args) {
 	    // create initial board from file
-	    In in = new In(args[0]);
-	    int n = in.readInt();
+	    Scanner in = new Scanner(System.in);
+	    int n = in.nextInt();
 	    int[][] blocks = new int[n][n];
 	    for (int i = 0; i < n; i++)
 	        for (int j = 0; j < n; j++)
-	            blocks[i][j] = in.readInt();
+	            blocks[i][j] = in.nextInt();
+	    in.close();
 	    Board initial = new Board(blocks);
 
 	    // solve the puzzle
@@ -134,11 +134,11 @@ public class Solver {
 
 	    // print solution to standard output
 	    if (!solver.isSolvable())
-	        StdOut.println("No solution possible");
+	        System.out.println("No solution possible");
 	    else {
-	        StdOut.println("Minimum number of moves = " + solver.moves());
+	        System.out.println("Minimum number of moves = " + solver.moves());
 	        for (Board board : solver.solution())
-	            StdOut.println(board);
+	            System.out.println(board);
 	    }
 	}
 }

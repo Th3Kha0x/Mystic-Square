@@ -1,6 +1,5 @@
-import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdRandom;
+import java.util.Random;
+import java.util.Stack;
 
 public class Board {
 	private final int[][] blocks;
@@ -63,12 +62,17 @@ public class Board {
 		}
 		return true;
 	}
+	
+	/*
+	 * A board with one random pair of blocks swapped. Does not count the clear blocks.
+	 */
 	public Board twin() {
 		int rand1 = -1, rand2 = -1;
 		int blankBlockNum = (blankRow*N) + blankCol;
+		Random rand = new Random();
 		while(rand1 == rand2 || rand1 == blankBlockNum || rand2 == blankBlockNum) {
-			rand1 = StdRandom.uniform(N*N);
-			rand2 = StdRandom.uniform(N*N);
+			rand1 = rand.nextInt(N*N);
+			rand2 = rand.nextInt(N*N);
 		}
 		int twin[][] = deepCopy();
 		int rand1Row = rand1 / N, rand1Col = rand1 % N;
@@ -79,6 +83,7 @@ public class Board {
 		twin[rand2Row][rand2Col] = swap;
 		return new Board(twin);
 	}
+
 	public boolean equals(Object y) {
 		if (y == this) return true;
 		if (y == null) return false;
@@ -102,10 +107,7 @@ public class Board {
 	}
 	
 	/*
-	 * In Java, primitive types (int, boolean, ...) are actually assigned to memory addresses as values,
-	 * however, assigning arrays sets the pointer value to the array. If b is an array of ints, int[] a = b
-	 * means that a is only a pointer reference to b, and a is not a standalone separate array entity.
-	 * Therefore, a new array must be instantiated, and each primitive value has to be copied.
+	 * A deep-copy for 2D primitive int arrays.
 	 */
 	private int[][] deepCopy() {
 		int[][] copiedBlocks = new int[N][N];
@@ -180,9 +182,9 @@ public class Board {
 
 		
 		Board b = new Board(testboard);
-		StdOut.println(b);
-		StdOut.println(b.hamming());
-		StdOut.println(b.manhattan());
+		System.out.println(b);
+		System.out.println(b.hamming());
+		System.out.println(b.manhattan());
 		
 //		Board c = b.twin();
 //		StdOut.println(c);

@@ -1,5 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.PriorityQueue;
-import java.util.Scanner;
 import java.util.Stack;
 
 public class Solver {
@@ -109,36 +110,12 @@ public class Solver {
 		if (solved == null) return null;
 		SearchNode head = solved;
 		
-		Stack<Board> s = new Stack<Board>();
+		Deque<Board> s = new ArrayDeque<Board>();
 		while(solved != null) {
 			s.push(solved.getBoard());
 			solved = solved.previous;
 		}
 		solved = head; // revert the location of solved
 		return s;
-	}
-	
-	public static void main(String[] args) {
-	    // create initial board from file
-	    Scanner in = new Scanner(System.in);
-	    int n = in.nextInt();
-	    int[][] blocks = new int[n][n];
-	    for (int i = 0; i < n; i++)
-	        for (int j = 0; j < n; j++)
-	            blocks[i][j] = in.nextInt();
-	    in.close();
-	    Board initial = new Board(blocks);
-
-	    // solve the puzzle
-	    Solver solver = new Solver(initial);
-
-	    // print solution to standard output
-	    if (!solver.isSolvable())
-	        System.out.println("No solution possible");
-	    else {
-	        System.out.println("Minimum number of moves = " + solver.moves());
-	        for (Board board : solver.solution())
-	            System.out.println(board);
-	    }
 	}
 }

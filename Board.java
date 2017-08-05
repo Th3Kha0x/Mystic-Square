@@ -159,38 +159,4 @@ public class Board {
 		}
 		return out;
 	}
-	public static void main(String[] args) {
-		int[][] testboard = new int[3][3];
-		int counter = 0;
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 3; j++) {
-				testboard[i][j] = ++counter;
-			}
-		}
-		testboard[2][2] = 0;
-		
-		// custom mods
-//		testboard[0][0] = 8;
-//		testboard[0][1] = 1;
-//		testboard[0][2] = 3;
-//		testboard[1][0] = 4;
-//		testboard[1][1] = 0;
-//		testboard[1][2] = 2;
-//		testboard[2][0] = 7;
-//		testboard[2][1] = 6;
-//		testboard[2][2] = 5;
-
-		
-		Board b = new Board(testboard);
-		System.out.println(b);
-		System.out.println(b.hamming());
-		System.out.println(b.manhattan());
-		
-//		Board c = b.twin();
-//		StdOut.println(c);
-//		StdOut.println(c.hamming());
-//		StdOut.println(c.manhattan());
-
-	}
-			
 }

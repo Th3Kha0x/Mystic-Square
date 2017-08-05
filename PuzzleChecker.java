@@ -113,7 +113,14 @@ public class PuzzleChecker {
             // solve the slider puzzle
             Board initial = new Board(tiles);
             Solver solver = new Solver(initial);
-            System.out.println(filename + ": " + solver.moves());
+			// print solution to standard output
+			if (!solver.isSolvable())
+				System.out.println("No solution possible");
+			else {
+				System.out.println("Minimum number of moves = " + solver.moves());
+				for (Board board : solver.solution())
+					System.out.println(board);
+			}
         }
     }
     
